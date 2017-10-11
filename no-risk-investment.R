@@ -7,11 +7,11 @@ no_risk_investment = function(r = 0.00022509, n_periods = 283){
   tax = r
   
 # declaração da matriz para armazenamento da solução final  
-  out_value = matrix(nrow = length(stocks_list), ncol = 2)
+  out_value = matrix(nrow = length(stocks_list), ncol = 3)
   rownames(out_value, do.NULL = FALSE)
   rownames(out_value) = stocks_list
   colnames(out_value, do.NULL = FALSE)
-  colnames(out_value) = c("NPC value", "IRR value")
+  colnames(out_value) = c("Investment", "NPC value", "IRR value")
   
 # declaração da matriz para armazenamento dos dados de dividendos e disponibilidade de ações
   database = matrix(nrow = length(stocks_list), ncol = 2)
@@ -51,6 +51,9 @@ no_risk_investment = function(r = 0.00022509, n_periods = 283){
     out_value[stocks, "IRR value"] = irr(cf = cash_flow[, stocks])
     
   }
+  
+# inicializa investimento inicial na matriz de saída
+  out_value[, "Investment"] = cash_flow[1, ]
   
   return (out_value)
   
