@@ -11,7 +11,7 @@ no_risk_investment = function(r = 0.00022509, n_periods = 283){
   rownames(out_value, do.NULL = FALSE)
   rownames(out_value) = stocks_list
   colnames(out_value, do.NULL = FALSE)
-  colnames(out_value) = c("Investment", "NPC value", "IRR value")
+  colnames(out_value) = c("Investment", "NPV value", "IRR value")
   
 # declaração da matriz para armazenamento dos dados de dividendos e disponibilidade de ações
   database = matrix(nrow = length(stocks_list), ncol = 2)
@@ -47,7 +47,7 @@ no_risk_investment = function(r = 0.00022509, n_periods = 283){
     cash_flow[is.na(cash_flow[, stocks]), stocks] = 0.00
     
 # realiza cálculo do VPL e TIR, respectivamente
-    out_value[stocks, "NPC value"] = npv(r = tax, cf = cash_flow[, stocks])
+    out_value[stocks, "NPV value"] = npv(r = tax, cf = cash_flow[, stocks])
     out_value[stocks, "IRR value"] = irr(cf = cash_flow[, stocks])
     
   }
