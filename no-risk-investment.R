@@ -1,4 +1,4 @@
-no_risk_investment = function(r = 0.00022509){
+no_risk_investment = function(r = 0.00022509, n_periods = 283){
   
   library("FinCal")
   
@@ -12,7 +12,7 @@ no_risk_investment = function(r = 0.00022509){
   colnames(database, do.NULL = FALSE)
   colnames(database) = c("Dividendos($)","Disponibilidade(nº)")
   
-  cash_flow = matrix(nrow = 283, ncol = length(stocks_list))
+  cash_flow = matrix(nrow = n_periods, ncol = length(stocks_list))
   colnames(cash_flow, do.NULL = FALSE)
   colnames(cash_flow) = stocks_list
   
