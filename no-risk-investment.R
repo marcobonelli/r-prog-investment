@@ -1,5 +1,5 @@
-no_risk_investment = function(r = 0.00022509, n_periods = 283){
-  
+no_risk_investment = function(r, n_periods){
+# pacote FinCal deve ser instalado previamente  
   library("FinCal")
   
   stocks_list = readLines("Acoes.txt") 
@@ -54,7 +54,47 @@ no_risk_investment = function(r = 0.00022509, n_periods = 283){
   
 # inicializa investimento inicial na matriz de saída
   out_value[, "Investment"] = cash_flow[1, ]
-  
+
+# retorna matriz de saída com informações sobre os investimentos
   return (out_value)
   
+}
+
+all_combinations = function(array, n){
+# pacote hier.part deve ser instalado previamente
+  require(hier.part)
+  
+# gera todas as opções de investimento não nulo
+  m_auxiliary = combos(n)$binary
+  
+# ajuste matriz de investimento
+  possible_options = matrix(0, nrow = length(m_auxiliary[, 1]) + 1, ncol = (n + 1))
+  
+# ajusta investimento nulo
+  for(i in c(1:length(m_auxiliary[, 1])))
+    for(j in c(1:length(m_auxiliary[1, ])))
+      possible_options[i + 1, j + 1] = m_auxiliary[i, j]
+
+# retorna opções de investimento 
+  return (possible_options)
+}
+
+portfolio_choose = function(budget = -200000, array = c("GOAU4", "SMLE3", "CPLE6", "ELET3", "BRKM5"), n = 5, r = 0.00022509, n_periods = 283){
+# chama funções de calculo das informações do investimento e das possibilidades de investimento
+  return_values = no_risk_investment(r, n_periods)
+  options_investment = all_combinations(array, n)
+
+# calcula desembolso necessário para cada opção de investimento 
+  for(i in c(1:length(options_investment[, 1]))){
+    options_investment[i, 1] = options_investment[i, 2:(n + 1)] %*% return_values[, 1]
+# anula investimentos que ultrapassam limite de orçamento
+    if(options_investment[i, 1] < budget)
+      options_investment[i, 1] = NA
+  }
+
+# ordena investimento segundo o retorno esperado  
+  options_investment = options_investment[do.call(order, as.data.frame(options_investment)), ]
+  
+# retorna o conjunto de investimentos de maior vpl acumulado
+  return (options_investment[1, ])
 }
